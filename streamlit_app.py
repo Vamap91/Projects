@@ -468,6 +468,7 @@ if page == "Profile":
 
 # PROJECTS PAGE
 elif page == "Projects":
+    # Header section
     st.markdown("""
     <div class="header-container">
         <h1>Project Portfolio</h1>
@@ -481,26 +482,305 @@ elif page == "Projects":
         <h3>🔥 HeatGlass - Emotional Call Analysis System</h3>
         
         <p>HeatGlass is an automated analysis system for audio calls (.mp3) created for Carglass. It uses AI (GPT-4 Turbo) to transcribe speech, identify sentiments, and classify the emotional temperature of conversations (calm, neutral, or critical).</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Automated transcription and sentiment analysis of customer calls</li>
+        <li>Emotional temperature classification with confidence scores</li>
+        <li>Strategic call summary based on the most sensitive segments</li>
+        <li>Technical scoring through an objective checklist</li>
+        <li>Visual representation with red indicators for negative impacts</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Reduced friction in customer service interactions and provided valuable insights for commercial and quality teams, leading to improved customer satisfaction and more effective training programs.</p>", unsafe_allow_html=True)
+    
+    # Tags for HeatGlass
+    st.markdown("""
+    <div>
+        <span class="tag">GPT-4 Turbo</span>
+        <span class="tag">Sentiment Analysis</span>
+        <span class="tag">Streamlit</span>
+        <span class="tag">Audio Processing</span>
+        <span class="tag">Customer Service</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Images for HeatGlass
+    col1, col2 = st.columns(2)
+    with col1:
+        try:
+            st.image("895cb66e-da1d-4458-b5ec-2ae2dd25ae7b.png", caption="Initial interface with audio upload", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=HeatGlass+Interface", caption="Initial interface with audio upload", use_column_width=True)
+    with col2:
+        try:
+            st.image("3c4269e5-34ea-4ce5-b8d5-bdb45bad833c.png", caption="Full analysis with checklist and risk indicators", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=HeatGlass+Analysis", caption="Full analysis with checklist and risk indicators", use_column_width=True)
+    
+    # Project 2: MirrorGlass
+    st.markdown("""
+    <div class="project-card">
+        <h3>🔍 MirrorGlass - Image Fraud Detection System</h3>
         
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Automated transcription and sentiment analysis of customer calls</li>
-            <li>Emotional temperature classification with confidence scores</li>
-            <li>Strategic call summary based on the most sensitive segments</li>
-            <li>Technical scoring through an objective checklist</li>
-            <li>Visual representation with red indicators for negative impacts</li>
-        </ul>
+        <p>MirrorGlass was created to detect visual inconsistencies in images sent by Carglass customers during service processes. The tool compares received images with a previous database, detecting duplications, inconsistencies, or abnormal patterns.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Advanced image comparison using computer vision techniques</li>
+        <li>Detection of duplicated or manipulated images</li>
+        <li>Metadata analysis for authenticity verification</li>
+        <li>Identification of suspicious patterns in customer submissions</li>
+        <li>Visual heatmaps highlighting potential areas of concern</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Enhanced fraud prevention capabilities and improved service quality by ensuring the authenticity of customer-submitted images, resulting in significant cost savings and increased trust in the claims process.</p>", unsafe_allow_html=True)
+    
+    # Tags for MirrorGlass
+    st.markdown("""
+    <div>
+        <span class="tag">Computer Vision</span>
+        <span class="tag">YOLOv8</span>
+        <span class="tag">Metadata Analysis</span>
+        <span class="tag">Machine Learning</span>
+        <span class="tag">Fraud Prevention</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Images for MirrorGlass
+    col1, col2 = st.columns(2)
+    with col1:
+        try:
+            st.image("239788e1-26f9-4c94-bcbf-7eb93fe76f59.png", caption="Upload interface and detection settings", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=MirrorGlass+Interface", caption="Upload interface and detection settings", use_column_width=True)
+    with col2:
+        try:
+            st.image("e5130d9d-966d-451e-a050-f5b79a473dd2.png", caption="Texture analysis with Heat Map", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=MirrorGlass+Analysis", caption="Texture analysis with Heat Map", use_column_width=True)
+    
+    # Project 3: Oráculo
+    st.markdown("""
+    <div class="project-card">
+        <h3>📚 Oráculo - Enterprise RAG System</h3>
         
-        <h4>Business Impact:</h4>
-        <p>Reduced friction in customer service interactions and provided valuable insights for commercial and quality teams, leading to improved customer satisfaction and more effective training programs.</p>
+        <p>Oráculo is an intelligent platform based on RAG (Retrieval-Augmented Generation) that answers questions based on company documents hosted on SharePoint. The tool accesses content via Microsoft Graph API and also uses OCR and scraping with Selenium to navigate and extract data from dynamically rendered pages.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Integration with SharePoint via Microsoft Graph API</li>
+        <li>OCR and web scraping capabilities for comprehensive data access</li>
+        <li>Support for multiple document formats (PDF, images, Word, HTML)</li>
+        <li>Contextually precise responses to user queries</li>
+        <li>Multi-language support across Portuguese, English, and French</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Significantly reduced information retrieval time, improved decision-making speed, and enhanced knowledge sharing across departments, resulting in more efficient operations and better-informed staff.</p>", unsafe_allow_html=True)
+    
+    # Tags for Oráculo
+    st.markdown("""
+    <div>
+        <span class="tag">RAG</span>
+        <span class="tag">Microsoft Graph API</span>
+        <span class="tag">OCR</span>
+        <span class="tag">Selenium</span>
+        <span class="tag">Knowledge Management</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a sample visualization for RAG system
+    labels = ['Traditional Search', 'RAG System']
+    values = [45, 8]
+    
+    fig = go.Figure(data=[
+        go.Bar(
+            x=labels,
+            y=values,
+            marker_color=['#1E40AF', '#3B82F6'],
+            text=values,
+            textposition='auto',
+        )
+    ])
+    
+    fig.update_layout(
+        title='Information Retrieval Time (minutes)',
+        yaxis_title='Minutes',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=400,
+        margin=dict(l=20, r=20, t=40, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 4: Fast Track
+    st.markdown("""
+    <div class="project-card">
+        <h3>⚡ Fast Track - Strategic Optimization Project (Vallourec)</h3>
         
-        <div>
-            <span class="tag">Workflow Automation</span>
-            <span class="tag">Approval Management</span>
-            <span class="tag">Compliance</span>
-            <span class="tag">Traceability</span>
-            <span class="tag">Process Governance</span>
-        </div>
+        <p>At Vallourec, the Fast Track project aimed to reduce customer response time from 30 days to just 5 days. I served as Product Owner, leading an AI initiative that automated engineering calculations and optimized order prioritization.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Automated engineering calculations for faster technical responses</li>
+        <li>Intelligent order prioritization system</li>
+        <li>Integration with internal company workflows</li>
+        <li>Connection between technical, commercial, and customer service areas</li>
+        <li>Real-time status tracking and reporting</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Dramatically increased service agility, reduced rework, and significantly improved customer satisfaction by delivering responses 6 times faster than the previous process.</p>", unsafe_allow_html=True)
+    
+    # Tags for Fast Track
+    st.markdown("""
+    <div>
+        <span class="tag">Process Optimization</span>
+        <span class="tag">Workflow Automation</span>
+        <span class="tag">Engineering Calculations</span>
+        <span class="tag">Customer Response</span>
+        <span class="tag">Product Ownership</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a comparison chart for Fast Track
+    labels = ['Before', 'After']
+    values = [30, 5]  # days
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=values,
+        marker_color=['#1E40AF', '#3B82F6'],
+        text=[f"{val} days" for val in values],
+        textposition='auto',
+    ))
+    
+    fig.update_layout(
+        title='Response Time Improvement',
+        yaxis_title='Days',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=400,
+        margin=dict(l=20, r=20, t=40, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 5: SmartCost
+    st.markdown("""
+    <div class="project-card">
+        <h3>💰 SmartCost - Intelligent Cost Recommendation (Vallourec)</h3>
+        
+        <p>Tool developed to support financial decisions in technical projects. SmartCost analyzes material costs and available alternatives based on engineering parameters, automatically recommending more economical options.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Automated cost analysis of materials and components</li>
+        <li>Engineering parameter-based recommendations</li>
+        <li>Detailed reports with financial insights</li>
+        <li>Alternative material suggestions with cost comparisons</li>
+        <li>Integration with existing engineering systems</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Enabled faster decision-making with lower budgetary risk by providing engineers and managers with data-driven cost optimization recommendations, resulting in significant project savings.</p>", unsafe_allow_html=True)
+    
+    # Tags for SmartCost
+    st.markdown("""
+    <div>
+        <span class="tag">Cost Optimization</span>
+        <span class="tag">Financial Analysis</span>
+        <span class="tag">Engineering Parameters</span>
+        <span class="tag">Decision Support</span>
+        <span class="tag">Reporting</span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a gauge chart for cost reduction
+    fig = go.Figure(go.Indicator(
+        mode = "gauge+number",
+        value = 18,
+        title = {'text': "Average Cost Reduction"},
+        gauge = {
+            'axis': {'range': [None, 50]},
+            'bar': {'color': "#10B981"},
+            'steps': [
+                {'range': [0, 10], 'color': "#EFF6FF"},
+                {'range': [10, 20], 'color': "#DBEAFE"},
+                {'range': [20, 30], 'color': "#BFDBFE"},
+                {'range': [30, 50], 'color': "#93C5FD"}
+            ],
+            'threshold': {
+                'line': {'color': "red", 'width': 4},
+                'thickness': 0.75,
+                'value': 18
+            }
+        },
+        number={'suffix': "%"}
+    ))
+    
+    fig.update_layout(
+        height=300,
+        margin=dict(l=20, r=20, t=50, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 6: FERT Workflow
+    st.markdown("""
+    <div class="project-card">
+        <h3>📋 FERT Workflow - Technical Order Approval Management (Vallourec)</h3>
+        
+        <p>System developed to automate the approval of technical and industrial orders, with a focus on compliance and traceability. Includes different approval levels, change control, and automated alerts.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Multi-level approval workflow automation</li>
+        <li>Change tracking and version control</li>
+        <li>Automated alerts and notifications</li>
+        <li>Compliance documentation and audit trails</li>
+        <li>Integration with enterprise resource planning systems</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Ensured governance, increased processing speed, and reduced errors in technical requisition processes (FERTs), leading to more efficient operations and better regulatory compliance.</p>", unsafe_allow_html=True)
+    
+    # Tags for FERT Workflow
+    st.markdown("""
+    <div>
+        <span class="tag">Workflow Automation</span>
+        <span class="tag">Approval Management</span>
+        <span class="tag">Compliance</span>
+        <span class="tag">Traceability</span>
+        <span class="tag">Process Governance</span>
     </div>
     """, unsafe_allow_html=True)
     
@@ -564,26 +844,31 @@ elif page == "Projects":
         <h3>🌐 Vallourec Online - Order Tracking Portal</h3>
         
         <p>Digital platform created for Vallourec customers to track the status of their orders and deliveries in real-time. The system consolidated data from various sources and presented clear, intuitive dashboards.</p>
-        
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Real-time order status tracking</li>
-            <li>Delivery timeline visualization</li>
-            <li>Document access and management</li>
-            <li>Consolidated data from multiple internal systems</li>
-            <li>Intuitive dashboards for customer self-service</li>
-        </ul>
-        
-        <h4>Business Impact:</h4>
-        <p>Provided greater autonomy to customers and reduced the volume of calls to the service team, improving customer experience while reducing operational overhead.</p>
-        
-        <div>
-            <span class="tag">Customer Portal</span>
-            <span class="tag">Order Tracking</span>
-            <span class="tag">Data Consolidation</span>
-            <span class="tag">Dashboards</span>
-            <span class="tag">Self-Service</span>
-        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Key Features:</h4>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Real-time order status tracking</li>
+        <li>Delivery timeline visualization</li>
+        <li>Document access and management</li>
+        <li>Consolidated data from multiple internal systems</li>
+        <li>Intuitive dashboards for customer self-service</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("<h4>Business Impact:</h4>", unsafe_allow_html=True)
+    st.markdown("<p>Provided greater autonomy to customers and reduced the volume of calls to the service team, improving customer experience while reducing operational overhead.</p>", unsafe_allow_html=True)
+    
+    # Tags for Vallourec Online
+    st.markdown("""
+    <div>
+        <span class="tag">Customer Portal</span>
+        <span class="tag">Order Tracking</span>
+        <span class="tag">Data Consolidation</span>
+        <span class="tag">Dashboards</span>
+        <span class="tag">Self-Service</span>
     </div>
     """, unsafe_allow_html=True)
     
@@ -654,50 +939,68 @@ elif page == "Experience":
     # Experience Timeline
     st.markdown("<h2>Career Timeline</h2>", unsafe_allow_html=True)
     
+    # Timeline items
     st.markdown("""
     <div class="timeline-item">
         <h4>AI Specialist | Business-Oriented Artificial Intelligence</h4>
         <h5>Carglass® Brasil</h5>
         <p class="timeline-date">April 2025 - Present</p>
-        <p>Leading the AI transformation initiative at Carglass, focusing on developing intelligent solutions for automotive glass repair and replacement services. Key responsibilities include:</p>
-        <ul>
-            <li>Designing and implementing AI-driven systems for fraud detection in insurance claims</li>
-            <li>Developing emotional intelligence solutions for call center operations</li>
-            <li>Creating RAG-based knowledge systems to enhance technical support</li>
-            <li>Collaborating with executive stakeholders to align AI initiatives with business strategy</li>
-        </ul>
+        <p>Leading the AI transformation initiative at Carglass, focusing on developing intelligent solutions for automotive glass repair and replacement services.</p>
     </div>
+    """, unsafe_allow_html=True)
     
+    st.markdown("<p>Key responsibilities include:</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Designing and implementing AI-driven systems for fraud detection in insurance claims</li>
+        <li>Developing emotional intelligence solutions for call center operations</li>
+        <li>Creating RAG-based knowledge systems to enhance technical support</li>
+        <li>Collaborating with executive stakeholders to align AI initiatives with business strategy</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
     <div class="timeline-item">
         <h4>Business Analyst</h4>
         <h5>Vallourec</h5>
         <p class="timeline-date">January 2021 - April 2025</p>
-        <p>Led business analysis and AI implementation initiatives at Vallourec. Key achievements:</p>
-        <ul>
-            <li>Implemented agile methodology across multiple departments</li>
-            <li>Managed backlog prioritization based on client needs and business impact</li>
-            <li>Created and analyzed KPIs, dashboards, and performance reports</li>
-            <li>Monitored execution of demands with executive professionals</li>
-            <li>Served as Product Owner, deciding which features and functionality to build</li>
-            <li>Analyzed user needs and supported customers in adopting new tools</li>
-        </ul>
+        <p>Led business analysis and AI implementation initiatives at Vallourec.</p>
     </div>
+    """, unsafe_allow_html=True)
     
+    st.markdown("<p>Key achievements:</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <ul>
+        <li>Implemented agile methodology across multiple departments</li>
+        <li>Managed backlog prioritization based on client needs and business impact</li>
+        <li>Created and analyzed KPIs, dashboards, and performance reports</li>
+        <li>Monitored execution of demands with executive professionals</li>
+        <li>Served as Product Owner, deciding which features and functionality to build</li>
+        <li>Analyzed user needs and supported customers in adopting new tools</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
     <div class="timeline-item">
         <h4>Sales Specialist</h4>
         <h5>Vallourec</h5>
         <p class="timeline-date">January 2019 - January 2021</p>
         <p>Managed sales operations across automotive and structural sectors:</p>
-        <ul>
-            <li>Managed active contacts and prospected for new customers</li>
-            <li>Analyzed business opportunities through customer segmentation</li>
-            <li>Performed data analysis using CRM Dynamics and Power BI with DAX</li>
-            <li>Developed VBA tools for process automation</li>
-            <li>Managed customer portfolios and sales orders via SAP</li>
-            <li>Conducted price analysis and developed calculation tools for budgeting</li>
-        </ul>
     </div>
+    """, unsafe_allow_html=True)
     
+    st.markdown("""
+    <ul>
+        <li>Managed active contacts and prospected for new customers</li>
+        <li>Analyzed business opportunities through customer segmentation</li>
+        <li>Performed data analysis using CRM Dynamics and Power BI with DAX</li>
+        <li>Developed VBA tools for process automation</li>
+        <li>Managed customer portfolios and sales orders via SAP</li>
+        <li>Conducted price analysis and developed calculation tools for budgeting</li>
+    </ul>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
     <div class="timeline-item">
         <h4>Intern</h4>
         <h5>Vallourec</h5>
@@ -717,7 +1020,9 @@ elif page == "Experience":
             <h4>AI Implementation Success</h4>
             <p>Led the development and implementation of AI solutions that reduced operational costs by €1.5M annually and improved customer satisfaction scores by 22%.</p>
         </div>
+        """, unsafe_allow_html=True)
         
+        st.markdown("""
         <div class="card">
             <h4>Process Optimization</h4>
             <p>Redesigned business processes using AI and automation, resulting in a 45% reduction in processing time and a 30% decrease in error rates.</p>
@@ -730,7 +1035,9 @@ elif page == "Experience":
             <h4>Team Leadership</h4>
             <p>Successfully led cross-functional teams of up to 12 members, bridging technical and business perspectives to deliver complex AI projects on time and within budget.</p>
         </div>
+        """, unsafe_allow_html=True)
         
+        st.markdown("""
         <div class="card">
             <h4>Data-Driven Decision Making</h4>
             <p>Implemented data analytics frameworks that enabled executive teams to make informed decisions, resulting in 28% improved resource allocation.</p>
@@ -905,28 +1212,36 @@ elif page == "Skills":
     # Certifications
     st.markdown("<h2>Certifications</h2>", unsafe_allow_html=True)
     
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-        <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="card" style="text-align: center;">
             <h4>Communication & Public Speaking</h4>
             <p style="color: #6c757d;">Certified Professional</p>
         </div>
-        
-        <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="card" style="text-align: center;">
             <h4>Data Analysis</h4>
             <p style="color: #6c757d;">Advanced Certification</p>
         </div>
-        
-        <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="card" style="text-align: center;">
             <h4>Intelligent Productivity</h4>
             <p style="color: #6c757d;">Professional Certification</p>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
     
     # Tools & Technologies
     st.markdown("<h2>Tools & Technologies</h2>", unsafe_allow_html=True)
     
+    # Define technologies
     technologies = [
         "Python", "Streamlit", "GPT-4", "RAG", "LangChain", "Computer Vision", 
         "NLP", "Power BI", "SQL", "SharePoint", "Azure", "Pandas", 
@@ -935,16 +1250,13 @@ elif page == "Skills":
         "Kanban", "JIRA", "Confluence", "SAP", "VBA", "Excel"
     ]
     
-    # Display technologies as tags
-    tech_html = ""
-    for tech in technologies:
-        tech_html += f'<span class="tag">{tech}</span>'
+    # Display tech tags
+    st.markdown('<div class="card" style="text-align: center; padding: 1.5rem;">', unsafe_allow_html=True)
     
-    st.markdown(f"""
-    <div class="card" style="text-align: center; padding: 1.5rem;">
-        {tech_html}
-    </div>
-    """, unsafe_allow_html=True)
+    for tech in technologies:
+        st.markdown(f'<span class="tag">{tech}</span>', unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # CONTACT PAGE
 elif page == "Contact":
@@ -1008,7 +1320,7 @@ elif page == "Contact":
     # Contact form
     st.markdown("<h2>Send me a message</h2>", unsafe_allow_html=True)
     
-    with st.form("contact_form"):
+    with st.form(key="contact_form"):
         col1, col2 = st.columns(2)
         with col1:
             name = st.text_input("Name")
@@ -1018,7 +1330,7 @@ elif page == "Contact":
         subject = st.text_input("Subject")
         message = st.text_area("Message", height=150)
         
-        submit_button = st.form_submit_button(label="Send Message")
+        submit_button = st.form_submit_button("Send Message")
         
         if submit_button:
             st.success("Thank you for your message! I'll get back to you soon.")
@@ -1029,250 +1341,4 @@ st.markdown("""
     <p>© 2025 Vinícius Paschoa | AI Specialist | Business-Oriented Artificial Intelligence</p>
     <p>Exploring the future with Artificial Intelligence</p>
 </div>
-""", unsafe_allow_html=True)<span class="tag">GPT-4 Turbo</span>
-            <span class="tag">Sentiment Analysis</span>
-            <span class="tag">Streamlit</span>
-            <span class="tag">Audio Processing</span>
-            <span class="tag">Customer Service</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        try:
-            st.image("895cb66e-da1d-4458-b5ec-2ae2dd25ae7b.png", caption="Initial interface with audio upload", use_column_width=True)
-        except:
-            st.image("https://via.placeholder.com/800x450?text=HeatGlass+Interface", caption="Initial interface with audio upload", use_column_width=True)
-    with col2:
-        try:
-            st.image("3c4269e5-34ea-4ce5-b8d5-bdb45bad833c.png", caption="Full analysis with checklist and risk indicators", use_column_width=True)
-        except:
-            st.image("https://via.placeholder.com/800x450?text=HeatGlass+Analysis", caption="Full analysis with checklist and risk indicators", use_column_width=True)
-    
-    # Project 2: MirrorGlass
-    st.markdown("""
-    <div class="project-card">
-        <h3>🔍 MirrorGlass - Image Fraud Detection System</h3>
-        
-        <p>MirrorGlass was created to detect visual inconsistencies in images sent by Carglass customers during service processes. The tool compares received images with a previous database, detecting duplications, inconsistencies, or abnormal patterns.</p>
-        
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Advanced image comparison using computer vision techniques</li>
-            <li>Detection of duplicated or manipulated images</li>
-            <li>Metadata analysis for authenticity verification</li>
-            <li>Identification of suspicious patterns in customer submissions</li>
-            <li>Visual heatmaps highlighting potential areas of concern</li>
-        </ul>
-        
-        <h4>Business Impact:</h4>
-        <p>Enhanced fraud prevention capabilities and improved service quality by ensuring the authenticity of customer-submitted images, resulting in significant cost savings and increased trust in the claims process.</p>
-        
-        <div>
-            <span class="tag">Computer Vision</span>
-            <span class="tag">YOLOv8</span>
-            <span class="tag">Metadata Analysis</span>
-            <span class="tag">Machine Learning</span>
-            <span class="tag">Fraud Prevention</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        try:
-            st.image("239788e1-26f9-4c94-bcbf-7eb93fe76f59.png", caption="Upload interface and detection settings", use_column_width=True)
-        except:
-            st.image("https://via.placeholder.com/800x450?text=MirrorGlass+Interface", caption="Upload interface and detection settings", use_column_width=True)
-    with col2:
-        try:
-            st.image("e5130d9d-966d-451e-a050-f5b79a473dd2.png", caption="Texture analysis with Heat Map", use_column_width=True)
-        except:
-            st.image("https://via.placeholder.com/800x450?text=MirrorGlass+Analysis", caption="Texture analysis with Heat Map", use_column_width=True)
-    
-    # Project 3: Oráculo (Knowledge Navigator)
-    st.markdown("""
-    <div class="project-card">
-        <h3>📚 Oráculo - Enterprise RAG System</h3>
-        
-        <p>Oráculo is an intelligent platform based on RAG (Retrieval-Augmented Generation) that answers questions based on company documents hosted on SharePoint. The tool accesses content via Microsoft Graph API and also uses OCR and scraping with Selenium to navigate and extract data from dynamically rendered pages.</p>
-        
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Integration with SharePoint via Microsoft Graph API</li>
-            <li>OCR and web scraping capabilities for comprehensive data access</li>
-            <li>Support for multiple document formats (PDF, images, Word, HTML)</li>
-            <li>Contextually precise responses to user queries</li>
-            <li>Multi-language support across Portuguese, English, and French</li>
-        </ul>
-        
-        <h4>Business Impact:</h4>
-        <p>Significantly reduced information retrieval time, improved decision-making speed, and enhanced knowledge sharing across departments, resulting in more efficient operations and better-informed staff.</p>
-        
-        <div>
-            <span class="tag">RAG</span>
-            <span class="tag">Microsoft Graph API</span>
-            <span class="tag">OCR</span>
-            <span class="tag">Selenium</span>
-            <span class="tag">Knowledge Management</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Create a sample visualization for RAG system
-    labels = ['Traditional Search', 'RAG System']
-    values = [45, 8]
-    
-    fig = go.Figure(data=[
-        go.Bar(
-            x=labels,
-            y=values,
-            marker_color=['#1E40AF', '#3B82F6'],
-            text=values,
-            textposition='auto',
-        )
-    ])
-    
-    fig.update_layout(
-        title='Information Retrieval Time (minutes)',
-        yaxis_title='Minutes',
-        plot_bgcolor='rgba(0,0,0,0)',
-        height=400,
-        margin=dict(l=20, r=20, t=40, b=20),
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Project 4: Fast Track
-    st.markdown("""
-    <div class="project-card">
-        <h3>⚡ Fast Track - Strategic Optimization Project (Vallourec)</h3>
-        
-        <p>At Vallourec, the Fast Track project aimed to reduce customer response time from 30 days to just 5 days. I served as Product Owner, leading an AI initiative that automated engineering calculations and optimized order prioritization.</p>
-        
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Automated engineering calculations for faster technical responses</li>
-            <li>Intelligent order prioritization system</li>
-            <li>Integration with internal company workflows</li>
-            <li>Connection between technical, commercial, and customer service areas</li>
-            <li>Real-time status tracking and reporting</li>
-        </ul>
-        
-        <h4>Business Impact:</h4>
-        <p>Dramatically increased service agility, reduced rework, and significantly improved customer satisfaction by delivering responses 6 times faster than the previous process.</p>
-        
-        <div>
-            <span class="tag">Process Optimization</span>
-            <span class="tag">Workflow Automation</span>
-            <span class="tag">Engineering Calculations</span>
-            <span class="tag">Customer Response</span>
-            <span class="tag">Product Ownership</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Create a comparison chart for Fast Track
-    labels = ['Before', 'After']
-    values = [30, 5]  # days
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        x=labels,
-        y=values,
-        marker_color=['#1E40AF', '#3B82F6'],
-        text=[f"{val} days" for val in values],
-        textposition='auto',
-    ))
-    
-    fig.update_layout(
-        title='Response Time Improvement',
-        yaxis_title='Days',
-        plot_bgcolor='rgba(0,0,0,0)',
-        height=400,
-        margin=dict(l=20, r=20, t=40, b=20),
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Project 5: SmartCost
-    st.markdown("""
-    <div class="project-card">
-        <h3>💰 SmartCost - Intelligent Cost Recommendation (Vallourec)</h3>
-        
-        <p>Tool developed to support financial decisions in technical projects. SmartCost analyzes material costs and available alternatives based on engineering parameters, automatically recommending more economical options.</p>
-        
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Automated cost analysis of materials and components</li>
-            <li>Engineering parameter-based recommendations</li>
-            <li>Detailed reports with financial insights</li>
-            <li>Alternative material suggestions with cost comparisons</li>
-            <li>Integration with existing engineering systems</li>
-        </ul>
-        
-        <h4>Business Impact:</h4>
-        <p>Enabled faster decision-making with lower budgetary risk by providing engineers and managers with data-driven cost optimization recommendations, resulting in significant project savings.</p>
-        
-        <div>
-            <span class="tag">Cost Optimization</span>
-            <span class="tag">Financial Analysis</span>
-            <span class="tag">Engineering Parameters</span>
-            <span class="tag">Decision Support</span>
-            <span class="tag">Reporting</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Create a gauge chart for cost reduction
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = 18,
-        title = {'text': "Average Cost Reduction"},
-        gauge = {
-            'axis': {'range': [None, 50]},
-            'bar': {'color': "#10B981"},
-            'steps': [
-                {'range': [0, 10], 'color': "#EFF6FF"},
-                {'range': [10, 20], 'color': "#DBEAFE"},
-                {'range': [20, 30], 'color': "#BFDBFE"},
-                {'range': [30, 50], 'color': "#93C5FD"}
-            ],
-            'threshold': {
-                'line': {'color': "red", 'width': 4},
-                'thickness': 0.75,
-                'value': 18
-            }
-        },
-        number={'suffix': "%"}
-    ))
-    
-    fig.update_layout(
-        height=300,
-        margin=dict(l=20, r=20, t=50, b=20),
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Project 6: FERT Workflow
-    st.markdown("""
-    <div class="project-card">
-        <h3>📋 FERT Workflow - Technical Order Approval Management (Vallourec)</h3>
-        
-        <p>System developed to automate the approval of technical and industrial orders, with a focus on compliance and traceability. Includes different approval levels, change control, and automated alerts.</p>
-        
-        <h4>Key Features:</h4>
-        <ul>
-            <li>Multi-level approval workflow automation</li>
-            <li>Change tracking and version control</li>
-            <li>Automated alerts and notifications</li>
-            <li>Compliance documentation and audit trails</li>
-            <li>Integration with enterprise resource planning systems</li>
-        </ul>
-        
-        <h4>Business Impact:</h4>
-        <p>Ensured governance, increased processing speed, and reduced errors in technical requisition processes (FERTs), leading to more efficient operations and better regulatory compliance.</p>
-        
-        <div>
+""", unsafe_allow_html=True)
