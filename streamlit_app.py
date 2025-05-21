@@ -26,10 +26,10 @@ if project == "Profile":
 
     st.markdown("---")
     st.subheader("🧠 Summary")
-    st.markdown(\""" 
+    st.markdown(""" 
 Artificial Intelligence Specialist focused on delivering measurable impact through intelligent automation.  
 Led multiple AI initiatives at Carglass and Vallourec using GPT, Streamlit, vision systems, and automation tools.  
-\""")
+""")
     st.markdown("---")
     st.subheader("🎓 Education")
     st.markdown(\""" 
