@@ -26,18 +26,20 @@ if project == "Profile":
 
     st.markdown("---")
     st.subheader("🧠 Summary")
-    st.markdown(""" 
+    st.markdown("""
 Artificial Intelligence Specialist focused on delivering measurable impact through intelligent automation.  
-Led multiple AI initiatives at Carglass and Vallourec using GPT, Streamlit, vision systems, and automation tools.  
+Led multiple AI initiatives at Carglass and Vallourec using GPT, Streamlit, vision systems, and automation tools.
 """)
+
     st.markdown("---")
     st.subheader("🎓 Education")
-    st.markdown(\""" 
+    st.markdown("""
 - Postgraduate in AI for Business Strategy – Centro Universitário Senac  
 - Postgraduate in Agile Models – UNIMAIS  
 - Bachelor's in Production Engineering – Senac  
 - Successful Negotiation – University of Michigan  
-\""")
+""")
+
     st.markdown("---")
     st.subheader("🌐 Languages")
     st.markdown("- Portuguese: Native\n- English: Full Professional\n- French: Professional Working")
@@ -45,38 +47,43 @@ Led multiple AI initiatives at Carglass and Vallourec using GPT, Streamlit, visi
 # MIRRORGLASS PAGE
 elif project == "MirrorGlass":
     st.title("🔍 MirrorGlass: Image Fraud Detection System")
-    st.markdown(\""" 
-MirrorGlass detects visual fraud in customer-submitted images using AI.  
-Techniques include SSIM, LBP, and deep image comparison.  
-\""")
+    st.markdown("""
+MirrorGlass is a system that uses advanced computer vision to detect image fraud in automotive claims.  
+It analyzes uploaded images using similarity techniques like **SIFT/SSIM** and detects texture manipulation with **LBP** (Local Binary Patterns).
+""")
+
     col1, col2 = st.columns(2)
     with col1:
         st.image("239788e1-26f9-4c94-bcbf-7eb93fe76f59.png", caption="Upload interface and detection settings")
     with col2:
         st.image("e5130d9d-966d-451e-a050-f5b79a473dd2.png", caption="Texture analysis with Heat Map")
 
-    st.markdown(\""" 
-### Similarity Thresholds  
-- 100%: Identical images  
-- 90–99%: Possibly altered duplicates  
-- 70–89%: Potential manipulation  
-- Below 50%: Likely unrelated  
-\""")  
+    st.markdown("""
+### How to interpret the results
+- **100% Similarity**: Identical images  
+- **>90%**: Virtually identical (may be cropped or filtered)  
+- **70–90%**: Potential duplicates  
+- **50–70%**: Similar, manual check recommended  
+- **30–50%**: Possibly related  
+- **<30%**: Likely different images  
+""")
 
 # HEATGLASS PAGE
 elif project == "HeatGlass":
     st.title("🔥 HeatGlass: Emotional Call Analysis System")
-    st.markdown(\""" 
-HeatGlass uses GPT-4 to analyze emotional tone and quality in service calls.  
-It includes transcription, checklist scoring, and business risk analysis.  
-\""")
-    st.image("895cb66e-da1d-4458-b5ec-2ae2dd25ae7b.png", caption="Audio upload and analysis interface")
-    st.image("3c4269e5-34ea-4ce5-b8d5-bdb45bad833c.png", caption="Checklist summary and sentiment results")
+    st.markdown("""
+HeatGlass evaluates call center interactions using audio analysis and GPT-based insights.  
+It classifies the emotional tone of the conversation, verifies compliance with mandatory scripts, and calculates a technical checklist score.
+""")
 
-    st.markdown(\""" 
-### Metrics Evaluated  
-- Client Sentiment: calm, neutral, critical  
-- Legal Compliance (LGPD)  
-- Script Usage & Closing Phrases  
-- Overall Score (out of 81 points)  
-\""")
+    st.image("895cb66e-da1d-4458-b5ec-2ae2dd25ae7b.png", caption="Initial interface with audio upload")
+    st.image("3c4269e5-34ea-4ce5-b8d5-bdb45bad833c.png", caption="Full analysis with checklist and risk indicators")
+
+    st.markdown("""
+### Key Metrics Evaluated
+- **Client Sentiment**: calm, neutral, or negative  
+- **Script Compliance**: checks finalization and legal guidelines  
+- **Checklist Score**: out of 81 points with failure highlights  
+- **Risk & Outcome**: Identifies critical points in the service  
+""")
+
