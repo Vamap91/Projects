@@ -1,613 +1,1260 @@
-import React, { useState, useEffect } from 'react';
-import { User, Briefcase, LineChart, Flag, Award, Book, Globe, Clipboard, Mail, Phone, Linkedin, ChevronRight, ExternalLink, Github, ArrowRight, Zap, DollarSign, FileCheck } from 'lucide-react';
+import streamlit as st
+import pandas as pd
+from PIL import Image
+import plotly.graph_objects as go
+import plotly.express as px
+import numpy as np
+import os
 
-// Main application component
-function Portfolio() {
-  const [activeSection, setActiveSection] = useState('profile');
-  const [isLoading, setIsLoading] = useState(true);
-  const [animateContent, setAnimateContent] = useState(false);
+# Page configuration with professional settings
+st.set_page_config(
+    page_title="Vinícius Paschoa | AI Portfolio",
+    page_icon="🧠",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-  // Simulate initial page loading with effect
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-      setTimeout(() => setAnimateContent(true), 100);
-    }, 600);
-  }, []);
-
-  // Function to switch between sections with animation
-  const switchSection = (section) => {
-    setAnimateContent(false);
-    setTimeout(() => {
-      setActiveSection(section);
-      setTimeout(() => setAnimateContent(true), 100);
-    }, 300);
-  };
-
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
-  return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Responsive Sidebar */}
-      <Sidebar activeSection={activeSection} switchSection={switchSection} />
-      
-      {/* Main Content */}
-      <main className={`flex-1 p-4 lg:p-6 overflow-y-auto transition-all duration-500 ease-in-out ${animateContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        {activeSection === 'profile' && <ProfileContent />}
-        {activeSection === 'projects' && <ProjectsContent />}
-        {activeSection === 'experience' && <ExperienceContent />}
-        {activeSection === 'skills' && <SkillsContent />}
-        {activeSection === 'contact' && <ContactContent />}
+# Custom CSS for clean, professional design with improved contrast
+def load_css():
+    st.markdown("""
+    <style>
+        /* Main color scheme - professional dark theme with high contrast */
+        :root {
+            --primary: #1E40AF;
+            --secondary: #3B82F6;
+            --accent: #60A5FA;
+            --light: #93C5FD;
+            --background: #F8FAFC;
+            --text: #1E293B;
+            --card-bg: #FFFFFF;
+            --sidebar-bg: #1E3A8A;
+            --sidebar-text: #FFFFFF;
+        }
         
-        {/* Footer */}
-        <footer className="mt-12 py-4 text-center text-gray-500 text-sm border-t border-gray-200">
-          <p>© 2025 Vinícius Paschoa | AI Specialist | Business-Oriented Artificial Intelligence</p>
-          <p className="mt-1">Exploring the future with Artificial Intelligence</p>
-        </footer>
-      </main>
-    </div>
-  );
-}
+        /* Base styling */
+        .main {
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        /* Header styling with improved contrast */
+        .header-container {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .header-container h1, .header-container h3, .header-container p {
+            color: white !important;
+            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Card styling with better shadows and borders */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            padding: 1.75rem;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Project card styling */
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            padding: 1.75rem;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Skill bar styling */
+        .skill-container {
+            margin-bottom: 1.25rem;
+        }
+        
+        .skill-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .skill-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+        
+        /* Tag styling */
+        .tag {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        
+        .tag:hover {
+            background-color: var(--primary);
+        }
+        
+        /* Sidebar styling with improved contrast */
+        .sidebar .sidebar-content {
+            background-color: var(--sidebar-bg);
+        }
+        
+        /* Ensure sidebar text is visible */
+        .sidebar-text {
+            color: var(--sidebar-text) !important;
+            font-weight: 500;
+        }
+        
+        .sidebar-contact {
+            color: var(--sidebar-text) !important;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-contact a {
+            color: var(--light) !important;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .sidebar-contact a:hover {
+            color: white !important;
+            text-decoration: underline;
+        }
+        
+        /* Timeline styling */
+        .timeline-item {
+            padding-left: 1.75rem;
+            border-left: 2px solid var(--secondary);
+            margin-bottom: 1.75rem;
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+        
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        
+        .timeline-date {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Metric box styling */
+        .metric-box {
+            text-align: center;
+            padding: 1.25rem;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .metric-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .metric-value {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .metric-label {
+            font-size: 1rem;
+            color: var(--text);
+            margin-top: 0.5rem;
+        }
+        
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            padding: 0.875rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        /* Fix for radio buttons in sidebar */
+        .st-cc {
+            color: var(--sidebar-text) !important;
+        }
+        
+        /* Footer styling */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 0.75rem;
+            color: var(--text);
+        }
+        
+        /* Image styling */
+        img {
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Profile image styling */
+        .profile-image {
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animation for skill bars */
+        @keyframes skillAnimation {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .animate-skill {
+            animation: skillAnimation 1s ease-out forwards;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
-// Loading screen component
-function LoadingScreen() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <div className="w-24 h-24 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
-      <h2 className="mt-8 text-2xl font-light text-blue-700">Loading AI Portfolio</h2>
-    </div>
-  );
-}
+load_css()
 
-// Sidebar component
-function Sidebar({ activeSection, switchSection }) {
-  return (
-    <aside className="w-full lg:w-64 bg-blue-900 p-6 lg:min-h-screen">
-      <div className="mb-8 text-center lg:text-left">
-        <h1 className="text-2xl font-bold text-white">
-          AI Portfolio
-        </h1>
-        <p className="text-sm text-blue-200 mt-1">Vinícius Paschoa</p>
-      </div>
-      
-      <nav>
-        <ul className="space-y-2">
-          <SidebarItem 
-            icon={<User size={18} />}
-            title="Profile"
-            isActive={activeSection === 'profile'}
-            onClick={() => switchSection('profile')}
-          />
-          <SidebarItem 
-            icon={<Clipboard size={18} />}
-            title="Projects"
-            isActive={activeSection === 'projects'}
-            onClick={() => switchSection('projects')}
-          />
-          <SidebarItem 
-            icon={<Briefcase size={18} />}
-            title="Experience"
-            isActive={activeSection === 'experience'}
-            onClick={() => switchSection('experience')}
-          />
-          <SidebarItem 
-            icon={<Award size={18} />}
-            title="Skills"
-            isActive={activeSection === 'skills'}
-            onClick={() => switchSection('skills')}
-          />
-          <SidebarItem 
-            icon={<Mail size={18} />}
-            title="Contact"
-            isActive={activeSection === 'contact'}
-            onClick={() => switchSection('contact')}
-          />
-        </ul>
-      </nav>
-      
-      <div className="mt-8 pt-6 border-t border-blue-800">
-        <div className="flex flex-col space-y-2">
-          <a 
-            href="mailto:viniciuspaschoa1@hotmail.com"
-            className="flex items-center text-sm text-blue-200 hover:text-white transition-colors"
-          >
-            <Mail size={14} className="mr-2" />
-            viniciuspaschoa1@hotmail.com
-          </a>
-          <a 
-            href="tel:+5511938012431" 
-            className="flex items-center text-sm text-blue-200 hover:text-white transition-colors"
-          >
-            <Phone size={14} className="mr-2" />
-            +55 (11) 93801-2431
-          </a>
-          <a 
-            href="https://www.linkedin.com/in/viniciuspaschoa" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center text-sm text-blue-200 hover:text-white transition-colors"
-          >
-            <Linkedin size={14} className="mr-2" />
-            LinkedIn
-          </a>
+# Sidebar navigation
+with st.sidebar:
+    st.markdown('<h3 class="sidebar-text" style="text-align: center;">Vinícius Paschoa</h3>', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-text" style="text-align: center;">AI Specialist | EU Citizen</p>', unsafe_allow_html=True)
+    
+    # Try to load profile image
+    try:
+        profile_image = Image.open("profile.jpg")
+        st.image(profile_image, width=150, clazz="profile-image")
+    except:
+        st.markdown("🧠")
+    
+    st.markdown("---")
+    
+    # Navigation
+    st.markdown('<p class="sidebar-text">Navigation</p>', unsafe_allow_html=True)
+    page = st.radio(
+        "",
+        ["Profile", "Projects", "Experience", "Skills", "Contact"]
+    )
+    
+    st.markdown("---")
+    
+    # Contact information with improved visibility
+    st.markdown('<p class="sidebar-text">Contact Information</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div>
+        <p class="sidebar-contact">📧 <a href="mailto:viniciuspaschoa1@hotmail.com">viniciuspaschoa1@hotmail.com</a></p>
+        <p class="sidebar-contact">📱 +55 (11) 93801-2431</p>
+        <p class="sidebar-contact">🌐 <a href="https://www.linkedin.com/in/viniciuspaschoa" target="_blank">LinkedIn Profile</a></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# PROFILE PAGE
+if page == "Profile":
+    # Header
+    st.markdown("""
+    <div class="header-container">
+        <h1>Vinícius Paschoa</h1>
+        <h3>AI Specialist | Business-Oriented Artificial Intelligence | EU Citizen</h3>
+        <p>Paris, Île-de-France, France</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # About section
+    st.markdown("<h2>About Me</h2>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        # Try to load profile image
+        try:
+            profile_image = Image.open("profile.jpg")
+            st.image(profile_image, width=250, clazz="profile-image")
+        except:
+            st.markdown("🧠")
+    
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <p>Artificial Intelligence Specialist focused on driving business transformation through Applied AI and Strategic Data Solutions. With a strong foundation in technology, business analysis, and project leadership, I specialize in applying Artificial Intelligence to solve real-world business challenges.</p>
+            
+            <p>At Vallourec and now at Carglass, I have led multiple initiatives under the internal AI accelerator program called "Agente", where I designed and deployed end-to-end solutions that automate complex workflows, optimize operations, and generate actionable insights.</p>
+            
+            <p>From structuring RAG-based assistants that interpret SharePoint knowledge bases to developing AI systems for emotional analysis of customer service interactions, my focus is always on delivering measurable impact. I manage the full lifecycle of AI-driven products — from identifying business needs and building prototypes in Streamlit to deploying scalable solutions and driving user adoption.</p>
         </div>
-        <div className="text-xs text-blue-400 mt-4">
-          &copy; 2025 Vinícius Paschoa
+        """, unsafe_allow_html=True)
+    
+    # Key metrics
+    st.markdown("<h2>Key Metrics</h2>", unsafe_allow_html=True)
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown("""
+        <div class="metric-box">
+            <div class="metric-value">7+</div>
+            <div class="metric-label">Years Experience</div>
         </div>
-      </div>
-    </aside>
-  );
-}
-
-// Sidebar item component
-function SidebarItem({ icon, title, isActive, onClick }) {
-  return (
-    <li>
-      <button
-        onClick={onClick}
-        className={`flex items-center w-full p-3 rounded-lg transition-all duration-200 ${
-          isActive 
-            ? 'bg-blue-800 text-white border-l-4 border-blue-300 pl-2' 
-            : 'text-blue-200 hover:bg-blue-800/50 hover:text-white'
-        }`}
-      >
-        <span className="mr-3">{icon}</span>
-        <span>{title}</span>
-        {isActive && <ChevronRight size={16} className="ml-auto" />}
-      </button>
-    </li>
-  );
-}
-
-// Section header component
-function SectionHeader({ title, subtitle }) {
-  return (
-    <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl p-6 mb-8 text-white">
-      <h1 className="text-3xl font-bold">{title}</h1>
-      <p className="mt-2 text-blue-100">{subtitle}</p>
-    </div>
-  );
-}
-
-// Profile section component
-function ProfileContent() {
-  return (
-    <div className="max-w-4xl mx-auto">
-      <SectionHeader 
-        title="Vinícius Paschoa" 
-        subtitle="AI Specialist | Business-Oriented Artificial Intelligence | EU Citizen"
-      />
-
-      <div className="flex flex-col md:flex-row gap-8 mb-8">
-        <div className="md:w-1/3">
-          {/* Profile photo placeholder */}
-          <div className="w-40 h-40 mx-auto md:mx-0 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 p-1">
-            <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-3xl font-bold text-blue-600">
-              VP
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="metric-box">
+            <div class="metric-value">10+</div>
+            <div class="metric-label">AI Projects</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="metric-box">
+            <div class="metric-value">3</div>
+            <div class="metric-label">Languages</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("""
+        <div class="metric-box">
+            <div class="metric-value">2</div>
+            <div class="metric-label">Postgraduate Degrees</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Education
+    st.markdown("<h2>Education</h2>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h4>Centro Universitário Senac</h4>
+            <p>Postgraduate in Artificial Intelligence for Business Strategy</p>
+            <p style="color: #6c757d;">February 2024 - April 2025</p>
+        </div>
+        
+        <div class="card">
+            <h4>Centro Universitário Senac</h4>
+            <p>Bachelor's in Production Engineering</p>
+            <p style="color: #6c757d;">2015 - 2020</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <h4>UNIMAIS - Faculdade Educamais</h4>
+            <p>Postgraduate in Agile Models</p>
+            <p style="color: #6c757d;">January 2021 - November 2021</p>
+        </div>
+        
+        <div class="card">
+            <h4>University of Michigan</h4>
+            <p>Successful Negotiation, Essential Strategies and Skills</p>
+            <p style="color: #6c757d;">January 2017 - June 2017</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Languages
+    st.markdown("<h2>Languages</h2>", unsafe_allow_html=True)
+    
+    languages = {
+        "Portuguese": 100,
+        "English": 95,
+        "French": 80
+    }
+    
+    for lang, level in languages.items():
+        st.markdown(f"""
+        <div class="skill-container">
+            <div style="display: flex; justify-content: space-between;">
+                <span>{lang}</span>
+                <span>{level}%</span>
             </div>
-          </div>
+            <div class="skill-bar">
+                <div class="skill-fill animate-skill" style="width: {level}%;"></div>
+            </div>
         </div>
+        """, unsafe_allow_html=True)
+
+# PROJECTS PAGE
+elif page == "Projects":
+    st.markdown("""
+    <div class="header-container">
+        <h1>Project Portfolio</h1>
+        <p>A showcase of my AI and business transformation projects</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Project 1: HeatGlass
+    st.markdown("""
+    <div class="project-card">
+        <h3>🔥 HeatGlass - Emotional Call Analysis System</h3>
         
-        <div className="md:w-2/3">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-xl font-bold text-blue-900 mb-4">About Me</h2>
-            <p className="text-gray-700 mb-3">
-              Artificial Intelligence Specialist focused on delivering measurable impact through intelligent automation.
-              With a strong foundation in technology, business analysis, and project leadership, I specialize in applying
-              Artificial Intelligence to solve real-world business challenges.
-            </p>
-            <p className="text-gray-700">
-              At Vallourec and now at Carglass, I have led multiple initiatives under the internal AI accelerator program called "Agente",
-              where I designed and deployed end-to-end solutions that automate complex workflows, optimize operations, and generate
-              actionable insights.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Key metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <MetricCard value="7+" label="Years Experience" />
-        <MetricCard value="10+" label="AI Projects" />
-        <MetricCard value="3" label="Languages" />
-        <MetricCard value="2" label="Postgraduate Degrees" />
-      </div>
-
-      {/* Education */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
-        <div className="flex items-center mb-4">
-          <Book className="text-blue-600 mr-2" size={20} />
-          <h2 className="text-xl font-bold text-gray-800">Education</h2>
-        </div>
+        <p>HeatGlass is an automated analysis system for audio calls (.mp3) created for Carglass. It uses AI (GPT-4 Turbo) to transcribe speech, identify sentiments, and classify the emotional temperature of conversations (calm, neutral, or critical).</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <EducationCard 
-            institution="Centro Universitário Senac"
-            degree="Postgraduate in AI for Business Strategy"
-            period="February 2024 - April 2025"
-          />
-          <EducationCard 
-            institution="UNIMAIS - Faculdade Educamais"
-            degree="Postgraduate in Agile Models"
-            period="January 2021 - November 2021"
-          />
-          <EducationCard 
-            institution="Centro Universitário Senac"
-            degree="Bachelor's in Production Engineering"
-            period="2015 - 2020"
-          />
-          <EducationCard 
-            institution="University of Michigan"
-            degree="Successful Negotiation, Essential Strategies and Skills"
-            period="January 2017 - June 2017"
-          />
-        </div>
-      </div>
-
-      {/* Languages */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center mb-4">
-          <Globe className="text-blue-600 mr-2" size={20} />
-          <h2 className="text-xl font-bold text-gray-800">Languages</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <LanguageCard language="Portuguese" level="Native" percentage={100} />
-          <LanguageCard language="English" level="Full Professional" percentage={95} />
-          <LanguageCard language="French" level="Professional Working" percentage={80} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Metric card component
-function MetricCard({ value, label }) {
-  return (
-    <div className="bg-white rounded-xl p-4 text-center shadow-sm border border-gray-100">
-      <div className="text-3xl font-bold text-blue-600">{value}</div>
-      <div className="text-sm text-gray-600 mt-1">{label}</div>
-    </div>
-  );
-}
-
-// Education card component
-function EducationCard({ institution, degree, period }) {
-  return (
-    <div className="p-4 border-l-4 border-blue-500 bg-blue-50/50">
-      <h3 className="font-bold text-gray-800">{institution}</h3>
-      <p className="text-gray-700">{degree}</p>
-      <p className="text-sm text-blue-600 mt-2">{period}</p>
-    </div>
-  );
-}
-
-// Language card component
-function LanguageCard({ language, level, percentage }) {
-  return (
-    <div className="p-4">
-      <div className="flex justify-between mb-2">
-        <span className="font-medium text-gray-800">{language}</span>
-        <span className="text-blue-600">{level}</span>
-      </div>
-      <div className="h-2 bg-gray-200 rounded-full">
-        <div 
-          className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full" 
-          style={{ width: `${percentage}%` }}
-        ></div>
-      </div>
-    </div>
-  );
-}
-
-// Projects component
-function ProjectsContent() {
-  return (
-    <div className="max-w-4xl mx-auto">
-      <SectionHeader 
-        title="Project Portfolio" 
-        subtitle="A showcase of my AI and business transformation projects"
-      />
-      
-      {/* Project: HeatGlass */}
-      <ProjectCard
-        title="HeatGlass"
-        subtitle="Emotional Call Analysis System"
-        description="HeatGlass is an automated analysis system for audio calls (.mp3) created for Carglass. It uses AI (GPT-4 Turbo) to transcribe speech, identify sentiments, and classify the emotional temperature of conversations (calm, neutral, or critical)."
-        color="red"
-        icon={<LineChart size={24} />}
-        tags={["GPT-4 Turbo", "Sentiment Analysis", "Streamlit", "Audio Processing", "Customer Service"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Automated transcription and sentiment analysis of customer calls</li>
             <li>Emotional temperature classification with confidence scores</li>
             <li>Strategic call summary based on the most sensitive segments</li>
             <li>Technical scoring through an objective checklist</li>
             <li>Visual representation with red indicators for negative impacts</li>
-          </ul>
-        </div>
+        </ul>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Reduced friction in customer service interactions and provided valuable insights for commercial and quality teams, 
-            leading to improved customer satisfaction and more effective training programs.
-          </p>
-        </div>
+        <p><strong>Business Impact:</strong> Reduced friction in customer service interactions and provided valuable insights for commercial and quality teams, leading to improved customer satisfaction and more effective training programs.</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-            <img src="/api/placeholder/500/300" alt="Initial interface with audio upload" className="w-full h-auto rounded" />
-            <p className="text-sm text-center text-gray-500 mt-2">Initial interface with audio upload</p>
-          </div>
-          <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-            <img src="/api/placeholder/500/300" alt="Full analysis with checklist and risk indicators" className="w-full h-auto rounded" />
-            <p className="text-sm text-center text-gray-500 mt-2">Full analysis with checklist and risk indicators</p>
-          </div>
+        <div>
+            <span class="tag">GPT-4 Turbo</span>
+            <span class="tag">Sentiment Analysis</span>
+            <span class="tag">Streamlit</span>
+            <span class="tag">Audio Processing</span>
+            <span class="tag">Customer Service</span>
         </div>
-      </ProjectCard>
-      
-      {/* Project: MirrorGlass */}
-      <ProjectCard
-        title="MirrorGlass"
-        subtitle="Image Fraud Detection System"
-        description="MirrorGlass was created to detect visual inconsistencies in images sent by Carglass customers during service processes. The tool compares received images with a previous database, detecting duplications, inconsistencies, or abnormal patterns."
-        color="blue"
-        icon={<Flag size={24} />}
-        tags={["Computer Vision", "YOLOv8", "Metadata Analysis", "Machine Learning", "Fraud Prevention"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        try:
+            st.image("895cb66e-da1d-4458-b5ec-2ae2dd25ae7b.png", caption="Initial interface with audio upload", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=HeatGlass+Interface", caption="Initial interface with audio upload", use_column_width=True)
+    with col2:
+        try:
+            st.image("3c4269e5-34ea-4ce5-b8d5-bdb45bad833c.png", caption="Full analysis with checklist and risk indicators", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=HeatGlass+Analysis", caption="Full analysis with checklist and risk indicators", use_column_width=True)
+    
+    # Project 2: MirrorGlass
+    st.markdown("""
+    <div class="project-card">
+        <h3>🔍 MirrorGlass - Image Fraud Detection System</h3>
+        
+        <p>MirrorGlass was created to detect visual inconsistencies in images sent by Carglass customers during service processes. The tool compares received images with a previous database, detecting duplications, inconsistencies, or abnormal patterns.</p>
+        
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Advanced image comparison using computer vision techniques</li>
             <li>Detection of duplicated or manipulated images</li>
             <li>Metadata analysis for authenticity verification</li>
             <li>Identification of suspicious patterns in customer submissions</li>
             <li>Visual heatmaps highlighting potential areas of concern</li>
-          </ul>
-        </div>
+        </ul>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Enhanced fraud prevention capabilities and improved service quality by ensuring the authenticity of customer-submitted images, 
-            resulting in significant cost savings and increased trust in the claims process.
-          </p>
-        </div>
+        <p><strong>Business Impact:</strong> Enhanced fraud prevention capabilities and improved service quality by ensuring the authenticity of customer-submitted images, resulting in significant cost savings and increased trust in the claims process.</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-            <img src="/api/placeholder/500/300" alt="Upload interface and detection settings" className="w-full h-auto rounded" />
-            <p className="text-sm text-center text-gray-500 mt-2">Upload interface and detection settings</p>
-          </div>
-          <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-            <img src="/api/placeholder/500/300" alt="Texture analysis with Heat Map" className="w-full h-auto rounded" />
-            <p className="text-sm text-center text-gray-500 mt-2">Texture analysis with Heat Map</p>
-          </div>
+        <div>
+            <span class="tag">Computer Vision</span>
+            <span class="tag">YOLOv8</span>
+            <span class="tag">Metadata Analysis</span>
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Fraud Prevention</span>
         </div>
-      </ProjectCard>
-      
-      {/* Project: Oráculo */}
-      <ProjectCard
-        title="Oráculo"
-        subtitle="Enterprise RAG System"
-        description="Oráculo is an intelligent platform based on RAG (Retrieval-Augmented Generation) that answers questions based on company documents hosted on SharePoint. The tool accesses content via Microsoft Graph API and also uses OCR and scraping with Selenium to navigate and extract data from dynamically rendered pages."
-        color="indigo"
-        icon={<Book size={24} />}
-        tags={["RAG", "Microsoft Graph API", "OCR", "Selenium", "Knowledge Management"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        try:
+            st.image("239788e1-26f9-4c94-bcbf-7eb93fe76f59.png", caption="Upload interface and detection settings", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=MirrorGlass+Interface", caption="Upload interface and detection settings", use_column_width=True)
+    with col2:
+        try:
+            st.image("e5130d9d-966d-451e-a050-f5b79a473dd2.png", caption="Texture analysis with Heat Map", use_column_width=True)
+        except:
+            st.image("https://via.placeholder.com/800x450?text=MirrorGlass+Analysis", caption="Texture analysis with Heat Map", use_column_width=True)
+    
+    # Project 3: Oráculo (Knowledge Navigator)
+    st.markdown("""
+    <div class="project-card">
+        <h3>📚 Oráculo - Enterprise RAG System</h3>
+        
+        <p>Oráculo is an intelligent platform based on RAG (Retrieval-Augmented Generation) that answers questions based on company documents hosted on SharePoint. The tool accesses content via Microsoft Graph API and also uses OCR and scraping with Selenium to navigate and extract data from dynamically rendered pages.</p>
+        
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Integration with SharePoint via Microsoft Graph API</li>
             <li>OCR and web scraping capabilities for comprehensive data access</li>
             <li>Support for multiple document formats (PDF, images, Word, HTML)</li>
             <li>Contextually precise responses to user queries</li>
             <li>Multi-language support across Portuguese, English, and French</li>
-          </ul>
-        </div>
+        </ul>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Significantly reduced information retrieval time, improved decision-making speed, and enhanced knowledge sharing 
-            across departments, resulting in more efficient operations and better-informed staff.
-          </p>
-        </div>
+        <p><strong>Business Impact:</strong> Significantly reduced information retrieval time, improved decision-making speed, and enhanced knowledge sharing across departments, resulting in more efficient operations and better-informed staff.</p>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mt-6">
-          <h4 className="font-bold text-gray-800 mb-2 text-center">Information Retrieval Time</h4>
-          <div className="h-64 flex items-end justify-center gap-12 p-4">
-            <div className="flex flex-col items-center">
-              <div className="h-52 w-20 bg-blue-900 rounded-t-lg flex items-center justify-center text-white font-bold">
-                45 min
-              </div>
-              <p className="mt-2 text-sm text-gray-600">Traditional Search</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="h-20 w-20 bg-blue-500 rounded-t-lg flex items-center justify-center text-white font-bold">
-                8 min
-              </div>
-              <p className="mt-2 text-sm text-gray-600">RAG System</p>
-            </div>
-          </div>
+        <div>
+            <span class="tag">RAG</span>
+            <span class="tag">Microsoft Graph API</span>
+            <span class="tag">OCR</span>
+            <span class="tag">Selenium</span>
+            <span class="tag">Knowledge Management</span>
         </div>
-      </ProjectCard>
-      
-      {/* Project: Fast Track */}
-      <ProjectCard
-        title="Fast Track"
-        subtitle="Strategic Optimization Project (Vallourec)"
-        description="At Vallourec, the Fast Track project aimed to reduce customer response time from 30 days to just 5 days. I served as Product Owner, leading an AI initiative that automated engineering calculations and optimized order prioritization."
-        color="blue"
-        icon={<Zap size={24} />}
-        tags={["Process Optimization", "Workflow Automation", "Engineering Calculations", "Customer Response", "Product Ownership"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a sample visualization for RAG system
+    labels = ['Traditional Search', 'RAG System']
+    values = [45, 8]
+    
+    fig = go.Figure(data=[
+        go.Bar(
+            x=labels,
+            y=values,
+            marker_color=['#1E40AF', '#3B82F6'],
+            text=values,
+            textposition='auto',
+        )
+    ])
+    
+    fig.update_layout(
+        title='Information Retrieval Time (minutes)',
+        yaxis_title='Minutes',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=400,
+        margin=dict(l=20, r=20, t=40, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 4: Fast Track
+    st.markdown("""
+    <div class="project-card">
+        <h3>⚡ Fast Track - Strategic Optimization Project (Vallourec)</h3>
+        
+        <p>At Vallourec, the Fast Track project aimed to reduce customer response time from 30 days to just 5 days. I served as Product Owner, leading an AI initiative that automated engineering calculations and optimized order prioritization.</p>
+        
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Automated engineering calculations for faster technical responses</li>
             <li>Intelligent order prioritization system</li>
             <li>Integration with internal company workflows</li>
             <li>Connection between technical, commercial, and customer service areas</li>
             <li>Real-time status tracking and reporting</li>
-          </ul>
-        </div>
+        </ul>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Dramatically increased service agility, reduced rework, and significantly improved customer satisfaction 
-            by delivering responses 6 times faster than the previous process.
-          </p>
-        </div>
+        <p><strong>Business Impact:</strong> Dramatically increased service agility, reduced rework, and significantly improved customer satisfaction by delivering responses 6 times faster than the previous process.</p>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mt-6">
-          <h4 className="font-bold text-gray-800 mb-2 text-center">Response Time Improvement</h4>
-          <div className="h-64 flex items-end justify-center gap-12 p-4">
-            <div className="flex flex-col items-center">
-              <div className="h-52 w-20 bg-blue-900 rounded-t-lg flex items-center justify-center text-white font-bold">
-                30 days
-              </div>
-              <p className="mt-2 text-sm text-gray-600">Before</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="h-10 w-20 bg-blue-500 rounded-t-lg flex items-center justify-center text-white font-bold">
-                5 days
-              </div>
-              <p className="mt-2 text-sm text-gray-600">After</p>
-            </div>
-          </div>
+        <div>
+            <span class="tag">Process Optimization</span>
+            <span class="tag">Workflow Automation</span>
+            <span class="tag">Engineering Calculations</span>
+            <span class="tag">Customer Response</span>
+            <span class="tag">Product Ownership</span>
         </div>
-      </ProjectCard>
-      
-      {/* Project: SmartCost */}
-      <ProjectCard
-        title="SmartCost"
-        subtitle="Intelligent Cost Recommendation (Vallourec)"
-        description="Tool developed to support financial decisions in technical projects. SmartCost analyzes material costs and available alternatives based on engineering parameters, automatically recommending more economical options."
-        color="green"
-        icon={<DollarSign size={24} />}
-        tags={["Cost Optimization", "Financial Analysis", "Engineering Parameters", "Decision Support", "Reporting"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a comparison chart for Fast Track
+    labels = ['Before', 'After']
+    values = [30, 5]  # days
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=values,
+        marker_color=['#1E40AF', '#3B82F6'],
+        text=[f"{val} days" for val in values],
+        textposition='auto',
+    ))
+    
+    fig.update_layout(
+        title='Response Time Improvement',
+        yaxis_title='Days',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=400,
+        margin=dict(l=20, r=20, t=40, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 5: SmartCost
+    st.markdown("""
+    <div class="project-card">
+        <h3>💰 SmartCost - Intelligent Cost Recommendation (Vallourec)</h3>
+        
+        <p>Tool developed to support financial decisions in technical projects. SmartCost analyzes material costs and available alternatives based on engineering parameters, automatically recommending more economical options.</p>
+        
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Automated cost analysis of materials and components</li>
             <li>Engineering parameter-based recommendations</li>
             <li>Detailed reports with financial insights</li>
             <li>Alternative material suggestions with cost comparisons</li>
             <li>Integration with existing engineering systems</li>
-          </ul>
-        </div>
+        </ul>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Enabled faster decision-making with lower budgetary risk by providing engineers and managers with data-driven cost optimization recommendations, resulting in significant project savings.
-          </p>
-        </div>
+        <p><strong>Business Impact:</strong> Enabled faster decision-making with lower budgetary risk by providing engineers and managers with data-driven cost optimization recommendations, resulting in significant project savings.</p>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mt-6">
-          <h4 className="font-bold text-gray-800 mb-2 text-center">Average Cost Reduction</h4>
-          <div className="flex justify-center items-center h-48">
-            <div className="relative w-48 h-48">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-3xl font-bold text-green-600">18%</div>
-              </div>
-              <div className="w-full h-full rounded-full border-8 border-green-500 opacity-20"></div>
-              <div className="absolute top-0 left-0 w-full h-full rounded-full border-8 border-green-500 border-t-transparent border-l-transparent border-r-transparent transform rotate-45"></div>
-            </div>
-          </div>
+        <div>
+            <span class="tag">Cost Optimization</span>
+            <span class="tag">Financial Analysis</span>
+            <span class="tag">Engineering Parameters</span>
+            <span class="tag">Decision Support</span>
+            <span class="tag">Reporting</span>
         </div>
-      </ProjectCard>
-      
-      {/* Project: FERT Workflow */}
-      <ProjectCard
-        title="FERT Workflow"
-        subtitle="Technical Order Approval Management (Vallourec)"
-        description="System developed to automate the approval of technical and industrial orders, with a focus on compliance and traceability. Includes different approval levels, change control, and automated alerts."
-        color="indigo"
-        icon={<FileCheck size={24} />}
-        tags={["Workflow Automation", "Approval Management", "Compliance", "Traceability", "Process Governance"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a gauge chart for cost reduction
+    fig = go.Figure(go.Indicator(
+        mode = "gauge+number",
+        value = 18,
+        title = {'text': "Average Cost Reduction"},
+        gauge = {
+            'axis': {'range': [None, 50]},
+            'bar': {'color': "#10B981"},
+            'steps': [
+                {'range': [0, 10], 'color': "#EFF6FF"},
+                {'range': [10, 20], 'color': "#DBEAFE"},
+                {'range': [20, 30], 'color': "#BFDBFE"},
+                {'range': [30, 50], 'color': "#93C5FD"}
+            ],
+            'threshold': {
+                'line': {'color': "red", 'width': 4},
+                'thickness': 0.75,
+                'value': 18
+            }
+        },
+        number={'suffix': "%"}
+    ))
+    
+    fig.update_layout(
+        height=300,
+        margin=dict(l=20, r=20, t=50, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 6: FERT Workflow
+    st.markdown("""
+    <div class="project-card">
+        <h3>📋 FERT Workflow - Technical Order Approval Management (Vallourec)</h3>
+        
+        <p>System developed to automate the approval of technical and industrial orders, with a focus on compliance and traceability. Includes different approval levels, change control, and automated alerts.</p>
+        
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Multi-level approval workflow automation</li>
             <li>Change tracking and version control</li>
             <li>Automated alerts and notifications</li>
             <li>Compliance documentation and audit trails</li>
             <li>Integration with enterprise resource planning systems</li>
-          </ul>
-        </div>
+        </ul>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Ensured governance, increased processing speed, and reduced errors in technical requisition processes (FERTs), leading to more efficient operations and better regulatory compliance.
-          </p>
-        </div>
+        <p><strong>Business Impact:</strong> Ensured governance, increased processing speed, and reduced errors in technical requisition processes (FERTs), leading to more efficient operations and better regulatory compliance.</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <h5 className="font-medium text-gray-800 text-center mb-2">Process Efficiency</h5>
-            <div className="flex justify-between items-center">
-              <div className="text-center">
-                <div className="text-xl font-bold text-red-500">72h</div>
-                <div className="text-xs text-gray-500">Before</div>
-              </div>
-              <div className="w-20 h-0.5 bg-gray-300 relative">
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-gray-500">
-                  <ArrowRight size={20} />
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-xl font-bold text-green-500">4h</div>
-                <div className="text-xs text-gray-500">After</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-            <h5 className="font-medium text-gray-800 text-center mb-2">Error Reduction</h5>
-            <div className="flex justify-center items-center h-24">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  -85%
-                </div>
-                <div className="text-xs text-gray-500 mt-1">in process errors</div>
-              </div>
-            </div>
-          </div>
+        <div>
+            <span class="tag">Workflow Automation</span>
+            <span class="tag">Approval Management</span>
+            <span class="tag">Compliance</span>
+            <span class="tag">Traceability</span>
+            <span class="tag">Process Governance</span>
         </div>
-      </ProjectCard>
-      
-      {/* Project: Vallourec Online */}
-      <ProjectCard
-        title="Vallourec Online"
-        subtitle="Order Tracking Portal"
-        description="Digital platform created for Vallourec customers to track the status of their orders and deliveries in real-time. The system consolidated data from various sources and presented clear, intuitive dashboards."
-        color="blue"
-        icon={<Globe size={24} />}
-        tags={["Customer Portal", "Order Tracking", "Data Consolidation", "Dashboards", "Self-Service"]}
-      >
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Key Features:</h4>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create comparison charts for FERT Workflow
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Process time improvement
+        labels = ['Before', 'After']
+        values = [72, 4]  # hours
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Bar(
+            x=labels,
+            y=values,
+            marker_color=['#DC2626', '#10B981'],
+            text=[f"{val} hours" for val in values],
+            textposition='auto',
+        ))
+        
+        fig.update_layout(
+            title='Process Efficiency Improvement',
+            yaxis_title='Hours',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            margin=dict(l=20, r=20, t=40, b=20),
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        # Error reduction
+        fig = go.Figure(go.Indicator(
+            mode = "number+delta",
+            value = 15,
+            delta = {'reference': 100, 'relative': True, 'valueformat': '.0%', 'position': 'bottom'},
+            title = {'text': "Error Reduction"},
+            number={'suffix': "%", 'valueformat': '.0f', 'font': {'color': '#10B981', 'size': 50}},
+            domain = {'y': [0, 1], 'x': [0.25, 0.75]}
+        ))
+        
+        fig.add_annotation(
+            text="-85% in process errors",
+            showarrow=False,
+            x=0.5,
+            y=0.3,
+            font=dict(size=14)
+        )
+        
+        fig.update_layout(
+            height=300,
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # Project 7: Vallourec Online
+    st.markdown("""
+    <div class="project-card">
+        <h3>🌐 Vallourec Online - Order Tracking Portal</h3>
+        
+        <p>Digital platform created for Vallourec customers to track the status of their orders and deliveries in real-time. The system consolidated data from various sources and presented clear, intuitive dashboards.</p>
+        
+        <p><strong>Key Features:</strong></p>
+        <ul>
             <li>Real-time order status tracking</li>
             <li>Delivery timeline visualization</li>
             <li>Document access and management</li>
             <li>Consolidated data from multiple internal systems</li>
             <li>Intuitive dashboards for customer self-service</li>
-          </ul>
+        </ul>
+        
+        <p><strong>Business Impact:</strong> Provided greater autonomy to customers and reduced the volume of calls to the service team, improving customer experience while reducing operational overhead.</p>
+        
+        <div>
+            <span class="tag">Customer Portal</span>
+            <span class="tag">Order Tracking</span>
+            <span class="tag">Data Consolidation</span>
+            <span class="tag">Dashboards</span>
+            <span class="tag">Self-Service</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create impact charts for Vallourec Online
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Customer satisfaction improvement
+        fig = go.Figure(go.Indicator(
+            mode = "number+delta",
+            value = 32,
+            delta = {'reference': 0, 'relative': False, 'position': 'top', 'valueformat': '+.0f'},
+            title = {'text': "Customer Satisfaction Improvement"},
+            number={'suffix': "%", 'valueformat': '.0f', 'font': {'color': '#3B82F6', 'size': 50}},
+            domain = {'y': [0, 1], 'x': [0.25, 0.75]}
+        ))
+        
+        fig.add_annotation(
+            text="in satisfaction scores",
+            showarrow=False,
+            x=0.5,
+            y=0.3,
+            font=dict(size=14)
+        )
+        
+        fig.update_layout(
+            height=300,
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        # Service calls reduction
+        fig = go.Figure(go.Indicator(
+            mode = "number+delta",
+            value = -45,
+            delta = {'reference': 0, 'relative': False, 'position': 'top', 'valueformat': '.0f'},
+            title = {'text': "Service Calls Reduction"},
+            number={'suffix': "%", 'valueformat': '.0f', 'font': {'color': '#10B981', 'size': 50}},
+            domain = {'y': [0, 1], 'x': [0.25, 0.75]}
+        ))
+        
+        fig.add_annotation(
+            text="in customer service calls",
+            showarrow=False,
+            x=0.5,
+            y=0.3,
+            font=dict(size=14)
+        )
+        
+        fig.update_layout(
+            height=300,
+            margin=dict(l=20, r=20, t=50, b=20),
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+
+# EXPERIENCE PAGE
+elif page == "Experience":
+    st.markdown("""
+    <div class="header-container">
+        <h1>Professional Experience</h1>
+        <p>My journey in applying AI to solve real business challenges</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Experience Timeline
+    st.markdown("<h2>Career Timeline</h2>", unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="timeline-item">
+        <h4>AI Specialist | Business-Oriented Artificial Intelligence</h4>
+        <h5>Carglass® Brasil</h5>
+        <p class="timeline-date">April 2025 - Present</p>
+        <p>Leading the AI transformation initiative at Carglass, focusing on developing intelligent solutions for automotive glass repair and replacement services. Key responsibilities include:</p>
+        <ul>
+            <li>Designing and implementing AI-driven systems for fraud detection in insurance claims</li>
+            <li>Developing emotional intelligence solutions for call center operations</li>
+            <li>Creating RAG-based knowledge systems to enhance technical support</li>
+            <li>Collaborating with executive stakeholders to align AI initiatives with business strategy</li>
+        </ul>
+    </div>
+    
+    <div class="timeline-item">
+        <h4>Business Analyst</h4>
+        <h5>Vallourec</h5>
+        <p class="timeline-date">January 2021 - April 2025</p>
+        <p>Led business analysis and AI implementation initiatives at Vallourec. Key achievements:</p>
+        <ul>
+            <li>Implemented agile methodology across multiple departments</li>
+            <li>Managed backlog prioritization based on client needs and business impact</li>
+            <li>Created and analyzed KPIs, dashboards, and performance reports</li>
+            <li>Monitored execution of demands with executive professionals</li>
+            <li>Served as Product Owner, deciding which features and functionality to build</li>
+            <li>Analyzed user needs and supported customers in adopting new tools</li>
+        </ul>
+    </div>
+    
+    <div class="timeline-item">
+        <h4>Sales Specialist</h4>
+        <h5>Vallourec</h5>
+        <p class="timeline-date">January 2019 - January 2021</p>
+        <p>Managed sales operations across automotive and structural sectors:</p>
+        <ul>
+            <li>Managed active contacts and prospected for new customers</li>
+            <li>Analyzed business opportunities through customer segmentation</li>
+            <li>Performed data analysis using CRM Dynamics and Power BI with DAX</li>
+            <li>Developed VBA tools for process automation</li>
+            <li>Managed customer portfolios and sales orders via SAP</li>
+            <li>Conducted price analysis and developed calculation tools for budgeting</li>
+        </ul>
+    </div>
+    
+    <div class="timeline-item">
+        <h4>Intern</h4>
+        <h5>Vallourec</h5>
+        <p class="timeline-date">August 2017 - January 2019</p>
+        <p>Started my career at Vallourec as an intern in the Powergen Sales department, gaining foundational experience in business operations and customer relationship management.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Key achievements
+    st.markdown("<h2>Key Achievements</h2>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h4>AI Implementation Success</h4>
+            <p>Led the development and implementation of AI solutions that reduced operational costs by €1.5M annually and improved customer satisfaction scores by 22%.</p>
         </div>
         
-        <div className="mt-4">
-          <h4 className="font-bold text-gray-800 mb-2">Business Impact:</h4>
-          <p className="text-gray-700">
-            Provided greater autonomy to customers and reduced the volume of calls to the service team, improving customer experience while reducing operational overhead.
+        <div class="card">
+            <h4>Process Optimization</h4>
+            <p>Redesigned business processes using AI and automation, resulting in a 45% reduction in processing time and a 30% decrease in error rates.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <h4>Team Leadership</h4>
+            <p>Successfully led cross-functional teams of up to 12 members, bridging technical and business perspectives to deliver complex AI projects on time and within budget.</p>
+        </div>
         
+        <div class="card">
+            <h4>Data-Driven Decision Making</h4>
+            <p>Implemented data analytics frameworks that enabled executive teams to make informed decisions, resulting in 28% improved resource allocation.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Skills growth visualization
+    st.markdown("<h2>Skills Evolution</h2>", unsafe_allow_html=True)
+    
+    # Sample data for skills evolution
+    years = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+    ai_skills = [10, 15, 20, 30, 45, 60, 75, 85, 95]
+    business_skills = [20, 35, 50, 65, 75, 80, 85, 90, 95]
+    technical_skills = [15, 25, 40, 55, 65, 75, 80, 85, 90]
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=years, 
+        y=ai_skills,
+        mode='lines+markers',
+        name='AI & Data Science',
+        line=dict(color='#1E40AF', width=3),
+        marker=dict(size=8)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=years, 
+        y=business_skills,
+        mode='lines+markers',
+        name='Business Analysis',
+        line=dict(color='#4F46E5', width=3),
+        marker=dict(size=8)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=years, 
+        y=technical_skills,
+        mode='lines+markers',
+        name='Technical Implementation',
+        line=dict(color='#60A5FA', width=3),
+        marker=dict(size=8)
+    ))
+    
+    fig.update_layout(
+        title='Professional Skills Development',
+        xaxis_title='Year',
+        yaxis_title='Proficiency Level',
+        legend_title='Skill Category',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(range=[0, 100]),
+        height=500,
+        margin=dict(l=20, r=20, t=40, b=20),
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+# SKILLS PAGE
+elif page == "Skills":
+    st.markdown("""
+    <div class="header-container">
+        <h1>Skills & Expertise</h1>
+        <p>Professional capabilities and technical competencies</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Technical Skills
+    st.markdown("<h2>Technical Skills</h2>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("<h3>AI & Data Science</h3>", unsafe_allow_html=True)
+        
+        ai_skills = {
+            "Large Language Models (GPT, RAG)": 95,
+            "Computer Vision": 85,
+            "Natural Language Processing": 90,
+            "Machine Learning": 85,
+            "Data Analysis & Visualization": 90
+        }
+        
+        for skill, level in ai_skills.items():
+            st.markdown(f"""
+            <div class="skill-container">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>{skill}</span>
+                    <span>{level}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill animate-skill" style="width: {level}%;"></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<h3>Development & Tools</h3>", unsafe_allow_html=True)
+        
+        dev_skills = {
+            "Python": 90,
+            "Streamlit": 95,
+            "Power BI & DAX": 85,
+            "SQL": 80,
+            "SharePoint Integration": 85
+        }
+        
+        for skill, level in dev_skills.items():
+            st.markdown(f"""
+            <div class="skill-container">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>{skill}</span>
+                    <span>{level}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill animate-skill" style="width: {level}%;"></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Business Skills
+    st.markdown("<h2>Business Skills</h2>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("<h3>Management & Leadership</h3>", unsafe_allow_html=True)
+        
+        mgmt_skills = {
+            "Agile Methodologies": 95,
+            "Product Ownership": 90,
+            "Project Management": 85,
+            "Team Leadership": 90
+        }
+        
+        for skill, level in mgmt_skills.items():
+            st.markdown(f"""
+            <div class="skill-container">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>{skill}</span>
+                    <span>{level}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill animate-skill" style="width: {level}%;"></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<h3>Business Analysis</h3>", unsafe_allow_html=True)
+        
+        ba_skills = {
+            "KPI Development & Analysis": 95,
+            "Process Optimization": 90,
+            "User Acceptance Testing": 85,
+            "Requirements Gathering": 90
+        }
+        
+        for skill, level in ba_skills.items():
+            st.markdown(f"""
+            <div class="skill-container">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>{skill}</span>
+                    <span>{level}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-fill animate-skill" style="width: {level}%;"></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Certifications
+    st.markdown("<h2>Certifications</h2>", unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+        <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+            <h4>Communication & Public Speaking</h4>
+            <p style="color: #6c757d;">Certified Professional</p>
+        </div>
+        
+        <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+            <h4>Data Analysis</h4>
+            <p style="color: #6c757d;">Advanced Certification</p>
+        </div>
+        
+        <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+            <h4>Intelligent Productivity</h4>
+            <p style="color: #6c757d;">Professional Certification</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Tools & Technologies
+    st.markdown("<h2>Tools & Technologies</h2>", unsafe_allow_html=True)
+    
+    technologies = [
+        "Python", "Streamlit", "GPT-4", "RAG", "LangChain", "Computer Vision", 
+        "NLP", "Power BI", "SQL", "SharePoint", "Azure", "Pandas", 
+        "NumPy", "Scikit-learn", "TensorFlow", "PyTorch", "Matplotlib", 
+        "Seaborn", "Git", "Docker", "REST APIs", "Agile", "Scrum", 
+        "Kanban", "JIRA", "Confluence", "SAP", "VBA", "Excel"
+    ]
+    
+    # Display technologies as tags
+    tech_html = ""
+    for tech in technologies:
+        tech_html += f'<span class="tag">{tech}</span>'
+    
+    st.markdown(f"""
+    <div class="card" style="text-align: center; padding: 1.5rem;">
+        {tech_html}
+    </div>
+    """, unsafe_allow_html=True)
+
+# CONTACT PAGE
+elif page == "Contact":
+    st.markdown("""
+    <div class="header-container">
+        <h1>Contact Information</h1>
+        <p>Let's discuss how AI can transform your business</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.markdown("""
+        <div class="card">
+            <h3>Contact Details</h3>
+            <p><strong>Email:</strong> viniciuspaschoa1@hotmail.com</p>
+            <p><strong>Phone:</strong> +55 (11) 93801-2431</p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/viniciuspaschoa" target="_blank">linkedin.com/in/viniciuspaschoa</a></p>
+            <p><strong>Location:</strong> Paris, Île-de-France, France</p>
+            <p><strong>Citizenship:</strong> EU Citizen</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="card">
+            <h3>Professional Interests</h3>
+            <p>I'm currently open to discussing:</p>
+            <ul>
+                <li>Business Analyst roles</li>
+                <li>Product Owner positions</li>
+                <li>Product Manager opportunities</li>
+                <li>AI Strategy consulting</li>
+                <li>Speaking engagements on AI implementation</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Languages section
+    st.markdown("""
+    <div class="card">
+        <h3>Languages</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <div style="flex: 1; min-width: 150px;">
+                <h4>Portuguese</h4>
+                <p>Native</p>
+            </div>
+            <div style="flex: 1; min-width: 150px;">
+                <h4>English</h4>
+                <p>Full Professional</p>
+            </div>
+            <div style="flex: 1; min-width: 150px;">
+                <h4>French</h4>
+                <p>Professional Working</p>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Contact form
+    st.markdown("<h2>Send me a message</h2>", unsafe_allow_html=True)
+    
+    contact_form = """
+    <form>
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Name</label>
+                <input type="text" id="name" name="name" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;">
+            </div>
+            <div style="flex: 1;">
+                <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email</label>
+                <input type="email" id="email" name="email" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;">
+            </div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label for="subject" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Subject</label>
+            <input type="text" id="subject" name="subject" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;">
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+            <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Message</label>
+            <textarea id="message" name="message" rows="5" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem;"></textarea>
+        </div>
+        <button type="submit" style="background-color: #1E40AF; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; font-weight: 500; cursor: pointer;">Send Message</button>
+    </form>
+    """
+    
+    st.markdown(contact_form, unsafe_allow_html=True)
+
+# Footer
+st.markdown("""
+<div class="footer">
+    <p>© 2025 Vinícius Paschoa | AI Specialist | Business-Oriented Artificial Intelligence</p>
+    <p>Exploring the future with Artificial Intelligence</p>
+</div>
+""", unsafe_allow_html=True)
