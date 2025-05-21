@@ -13,19 +13,21 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for clean, professional design
+# Custom CSS for clean, professional design with improved contrast
 def load_css():
     st.markdown("""
     <style>
-        /* Main color scheme - professional and clean */
+        /* Main color scheme - professional and clean with better contrast */
         :root {
-            --primary: #0A2647;
-            --secondary: #144272;
-            --accent: #205295;
-            --light: #2C74B3;
-            --background: #f8f9fa;
-            --text: #212529;
-            --card-bg: #ffffff;
+            --primary: #1E3A8A;
+            --secondary: #3B82F6;
+            --accent: #60A5FA;
+            --light: #93C5FD;
+            --background: #F9FAFB;
+            --text: #1F2937;
+            --card-bg: #FFFFFF;
+            --sidebar-bg: #1E3A8A;
+            --sidebar-text: #FFFFFF;
         }
         
         /* Base styling */
@@ -41,13 +43,17 @@ def load_css():
             font-weight: 600;
         }
         
-        /* Header styling */
+        /* Header styling with improved contrast */
         .header-container {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             padding: 2rem;
             border-radius: 0.5rem;
-            color: white;
             margin-bottom: 2rem;
+        }
+        
+        .header-container h1, .header-container h3, .header-container p {
+            color: white !important;
+            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
         }
         
         /* Card styling */
@@ -57,7 +63,7 @@ def load_css():
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--secondary);
         }
         
         /* Project card styling */
@@ -67,7 +73,7 @@ def load_css():
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--light);
+            border-left: 4px solid var(--accent);
         }
         
         /* Skill bar styling */
@@ -84,14 +90,14 @@ def load_css():
         
         .skill-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--light));
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
             border-radius: 4px;
         }
         
         /* Tag styling */
         .tag {
             display: inline-block;
-            background-color: var(--light);
+            background-color: var(--secondary);
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 1rem;
@@ -100,15 +106,35 @@ def load_css():
             font-size: 0.85rem;
         }
         
-        /* Sidebar styling */
+        /* Sidebar styling with improved contrast */
         .sidebar .sidebar-content {
-            background-color: var(--primary);
+            background-color: var(--sidebar-bg);
+        }
+        
+        /* Ensure sidebar text is visible */
+        .sidebar-text {
+            color: var(--sidebar-text) !important;
+            font-weight: 500;
+        }
+        
+        .sidebar-contact {
+            color: var(--sidebar-text) !important;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-contact a {
+            color: var(--light) !important;
+            text-decoration: none;
+        }
+        
+        .sidebar-contact a:hover {
+            text-decoration: underline;
         }
         
         /* Timeline styling */
         .timeline-item {
             padding-left: 1.5rem;
-            border-left: 2px solid var(--accent);
+            border-left: 2px solid var(--secondary);
             margin-bottom: 1.5rem;
             position: relative;
         }
@@ -121,7 +147,7 @@ def load_css():
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background-color: var(--accent);
+            background-color: var(--secondary);
         }
         
         /* Metric box styling */
@@ -164,6 +190,21 @@ def load_css():
         tr:nth-child(even) {
             background-color: #f8f9fa;
         }
+        
+        /* Fix for radio buttons in sidebar */
+        .st-cc {
+            color: var(--sidebar-text) !important;
+        }
+        
+        /* Footer styling */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 0.5rem;
+            color: var(--text);
+        }
     </style>
     """, unsafe_allow_html=True)
 
@@ -171,8 +212,8 @@ load_css()
 
 # Sidebar navigation
 with st.sidebar:
-    st.markdown('<h3 style="color: white; text-align: center;">Vinicius Paschoa</h3>', unsafe_allow_html=True)
-    st.markdown('<p style="color: white; text-align: center;">AI Specialist | EU Citizen</p>', unsafe_allow_html=True)
+    st.markdown('<h3 class="sidebar-text" style="text-align: center;">Vinicius Paschoa</h3>', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-text" style="text-align: center;">AI Specialist | EU Citizen</p>', unsafe_allow_html=True)
     
     # Try to load profile image
     try:
@@ -184,19 +225,21 @@ with st.sidebar:
     st.markdown("---")
     
     # Navigation
+    st.markdown('<p class="sidebar-text">Navigation</p>', unsafe_allow_html=True)
     page = st.radio(
-        "Navigation",
+        "",
         ["Profile", "Projects", "Experience", "Skills", "Contact"]
     )
     
     st.markdown("---")
     
-    # Contact information
+    # Contact information with improved visibility
+    st.markdown('<p class="sidebar-text">Contact Information</p>', unsafe_allow_html=True)
     st.markdown("""
-    <div style="color: white;">
-        <p>📧 viniciuspaschoa1@hotmail.com</p>
-        <p>📱 +55 (11) 93801-2431</p>
-        <p>🌐 <a href="https://www.linkedin.com/in/viniciuspaschoa" style="color: white;">LinkedIn Profile</a></p>
+    <div>
+        <p class="sidebar-contact">📧 <a href="mailto:viniciuspaschoa1@hotmail.com">viniciuspaschoa1@hotmail.com</a></p>
+        <p class="sidebar-contact">📱 +55 (11) 93801-2431</p>
+        <p class="sidebar-contact">🌐 <a href="https://www.linkedin.com/in/viniciuspaschoa" target="_blank">LinkedIn Profile</a></p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -442,7 +485,7 @@ elif page == "Projects":
         go.Bar(
             x=labels,
             y=values,
-            marker_color=['#144272', '#2C74B3']
+            marker_color=['#1E3A8A', '#3B82F6']
         )
     ])
     
@@ -677,7 +720,7 @@ elif page == "Experience":
         y=ai_skills,
         mode='lines+markers',
         name='AI & Data Science',
-        line=dict(color='#0A2647', width=3),
+        line=dict(color='#1E3A8A', width=3),
         marker=dict(size=8)
     ))
     
@@ -686,7 +729,7 @@ elif page == "Experience":
         y=business_skills,
         mode='lines+markers',
         name='Business Analysis',
-        line=dict(color='#144272', width=3),
+        line=dict(color='#3B82F6', width=3),
         marker=dict(size=8)
     ))
     
@@ -695,7 +738,7 @@ elif page == "Experience":
         y=technical_skills,
         mode='lines+markers',
         name='Technical Implementation',
-        line=dict(color='#2C74B3', width=3),
+        line=dict(color='#60A5FA', width=3),
         marker=dict(size=8)
     ))
     
@@ -889,7 +932,10 @@ elif page == "Contact":
             <p><strong>Location:</strong> Paris, Île-de-France, France</p>
             <p><strong>Citizenship:</strong> EU Citizen</p>
         </div>
-        
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
         <div class="card">
             <h3>Professional Interests</h3>
             <p>I'm currently open to discussing:</p>
@@ -903,38 +949,30 @@ elif page == "Contact":
         </div>
         """, unsafe_allow_html=True)
     
-    with col2:
-        st.markdown("""
-        <div class="card">
-            <h3>Send a Message</h3>
-            <p>Please fill out the form below to get in touch:</p>
+    # Languages section
+    st.markdown("""
+    <div class="card">
+        <h3>Languages</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <div style="flex: 1; min-width: 150px;">
+                <h4>Portuguese</h4>
+                <p>Native</p>
+            </div>
+            <div style="flex: 1; min-width: 150px;">
+                <h4>English</h4>
+                <p>Full Professional</p>
+            </div>
+            <div style="flex: 1; min-width: 150px;">
+                <h4>French</h4>
+                <p>Professional Working</p>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-        
-        # Contact form
-        with st.form("contact_form"):
-            name = st.text_input("Name")
-            email = st.text_input("Email")
-            company = st.text_input("Company")
-            message = st.text_area("Message")
-            
-            submitted = st.form_submit_button("Send Message")
-            
-            if submitted:
-                st.success("Thank you for your message! I'll get back to you soon.")
-        
-        st.markdown("""
-        <div class="card">
-            <h3>Languages</h3>
-            <p><strong>Portuguese:</strong> Native</p>
-            <p><strong>English:</strong> Full Professional</p>
-            <p><strong>French:</strong> Professional Working</p>
-        </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
 # Footer
 st.markdown("""
-<div style="text-align: center; margin-top: 2rem; padding: 1rem; background-color: #f8f9fa; border-radius: 0.5rem;">
+<div class="footer">
     <p>© 2025 Vinicius Paschoa | AI Specialist | Business-Oriented Artificial Intelligence</p>
     <p>Exploring the future with Artificial Intelligence</p>
 </div>
