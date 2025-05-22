@@ -285,11 +285,7 @@ if page == "Profile":
     with col2:
         st.markdown("""
         <div class="card">
-            <p>Artificial Intelligence Specialist focused on driving business transformation through Applied AI and Strategic Data Solutions. With a strong foundation in technology, business analysis, and project leadership, I specialize in applying Artificial Intelligence to solve real-world business challenges.</p>
-            
-            <p>At Vallourec and now at Carglass, I have led multiple initiatives under the internal AI accelerator program called "Agente", where I designed and deployed end-to-end solutions that automate complex workflows, optimize operations, and generate actionable insights.</p>
-            
-            <p>From structuring RAG-based assistants that interpret SharePoint knowledge bases to developing AI systems for emotional analysis of customer service interactions, my focus is always on delivering measurable impact. I manage the full lifecycle of AI-driven products — from identifying business needs and building prototypes in Streamlit to deploying scalable solutions and driving user adoption.</p>
+            <p>Artificial Intelligence Specialist focused on driving business transformation through Applied AI and Strategic Data Solutions. With a strong foundation in technology, business analysis, and project leadership, I specialize in applying Artificial Intelligence to solve real-world business challenges. At Vallourec and now at Carglass, I have led multiple initiatives under the internal AI accelerator program called "Agente", where I designed and deployed end-to-end solutions that automate complex workflows, optimize operations, and generate actionable insights. From structuring RAG-based assistants that interpret SharePoint knowledge bases to developing AI systems for emotional analysis of customer service interactions, my focus is always on delivering measurable impact. I manage the full lifecycle of AI-driven products — from identifying business needs and building prototypes in Streamlit to deploying scalable solutions and driving user adoption.</p>
         </div>
         """, unsafe_allow_html=True)
     
